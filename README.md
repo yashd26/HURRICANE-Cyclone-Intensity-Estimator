@@ -1,8 +1,6 @@
 # Dependencies to be installed:
 python
 
-postgresql - Database
-
 pip install django
 
 pip install psycopg2
@@ -22,5 +20,7 @@ pip install beautifulsoup4
 pip install requests
 
 pip install matplotlib
+
+#### Database: POSTGRESQL
 
 ### Super User (username: postgre, password: root)
