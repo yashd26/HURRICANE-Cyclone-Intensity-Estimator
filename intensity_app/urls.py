@@ -2,5 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-
-] # Add url here
+  path('home/', views.home),
+  path('explore/', views.explore),
+  path('readcontent/', views.readcontent),
+] 
