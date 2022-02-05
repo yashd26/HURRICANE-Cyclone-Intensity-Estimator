@@ -18,12 +18,16 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import warnings
 import gc
+import os
+import glob
+import shutil
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=FutureWarning)
-    from keras import models
-    from keras import layers
-    from keras import metrics
-    from keras.callbacks import EarlyStopping
+    from tensorflow.keras import models
+    from tensorflow.keras import layers
+    from tensorflow.keras import metrics
+    from tensorflow.keras.callbacks import EarlyStopping
+    from tensorflow.keras.preprocessing import image
 
 
 def read_and_prepare_data(validation_mode, k=5, augment=True):
@@ -75,7 +79,7 @@ def read_and_prepare_data(validation_mode, k=5, augment=True):
 def augment_images(images, labels):
 
     # Create generators to augment images
-    from keras.preprocessing import image
+    from tensorflow.keras.preprocessing import image
     flip_generator = image.ImageDataGenerator(
         horizontal_flip=True,
         vertical_flip=True
@@ -195,13 +199,17 @@ def performance_by_epoch(performance_log):
     performance_df = pd.DataFrame(columns=['epoch', 'train_or_test', 'loss_or_mae', 'value'])
     for i in range(len(train_loss)):
         new_row = {'epoch': epochs[i], 'train_or_test': 'train', 'loss_or_mae': 'loss', 'value': train_loss[i]}
-        performance_df = performance_df.append(new_row, ignore_index=True)
-        new_row = {'epoch': epochs[i], 'train_or_test': 'test', 'loss_or_mae': 'loss', 'value': test_loss[i]}
-        performance_df = performance_df.append(new_row, ignore_index=True)
-        new_row = {'epoch': epochs[i], 'train_or_test': 'train', 'loss_or_mae': 'mae', 'value': train_mae[i]}
-        performance_df = performance_df.append(new_row, ignore_index=True)
-        new_row = {'epoch': epochs[i], 'train_or_test': 'test', 'loss_or_mae': 'mae', 'value': test_mae[i]}
-        performance_df = performance_df.append(new_row, ignore_index=True)
+        new_row = pd.DataFrame(new_row, index=[0])
+        performance_df = pd.concat([performance_df, new_row], ignore_index=True)
+        new_row = {'epoch': [epochs[i]], 'train_or_test': ['test'], 'loss_or_mae': ['loss'], 'value': [test_loss[i]]}
+        new_row = pd.DataFrame(new_row, index=[0])
+        performance_df = pd.concat([performance_df, new_row], ignore_index=True)
+        new_row = {'epoch': [epochs[i]], 'train_or_test': ['train'], 'loss_or_mae': ['mae'], 'value': [train_mae[i]]}
+        new_row = pd.DataFrame(new_row, index=[0])
+        performance_df = pd.concat([performance_df, new_row], ignore_index=True)
+        new_row = {'epoch': [epochs[i]], 'train_or_test': ['test'], 'loss_or_mae': ['mae'], 'value': [test_mae[i]]}
+        new_row = pd.DataFrame(new_row, index=[0])
+        performance_df = pd.concat([performance_df, new_row], ignore_index=True)
     performance_df = performance_df.astype({'epoch': np.int64})
 
     # Plot metrics on graph, fitted with exponential decay curves
@@ -237,7 +245,8 @@ def generate_predictions(model, test_images, test_labels):
             'abs_error': abs_error,
             'abs_error_squared': abs_error ** 2,
             'category': category_of(test_labels[i])}
-        processed_predictions = processed_predictions.append(new_row, ignore_index=True)
+        new_row = pd.DataFrame(new_row, index=[0])
+        processed_predictions = pd.concat([processed_predictions, new_row], ignore_index=True)
         print_progress('Processing Predictions', i + 1, len(raw_predictions))
 
     return processed_predictions
@@ -322,11 +331,41 @@ def category_of(wind_speed):
     else:
         return 'Category 5'
 
+def save_model_results(*argv):
+    if not os.path.exists('model_results'):
+        os.makedirs('model_results')
+
+    file_path = "_"
+    file_path = file_path.join(argv)
+    file_path = "model_results/" + file_path
+
+    if not os.path.exists(file_path):
+        os.makedirs(file_path)
+    else:
+        return
+
+    content = ['MeanAbsoluteError: ' + str(round(float(predictions['abs_error'].mean()), 2)) + 'knots',
+               'RootMeanSquareError: ' + str(round(float(predictions['abs_error_squared'].mean() ** 0.5), 2)) + 'knots']
+
+    for pngfile in glob.iglob(os.path.join("", "*.PNG")):
+        shutil.copy(pngfile, file_path)
+
+    file = open(f"{file_path}/results.txt", "a+")
+    file.writelines(content)
+    file.close()
+
+def predict_image(model, img_path="./test_image/image1.jpg"):
+    img = image.load_img(img_path, target_size=(50, 50), grayscale=True)
+    img_array = image.img_to_array(img)
+    img_batch = np.expand_dims(img_array, axis=0)
+    prediction = model.predict(img_batch)
+    print(prediction)
 
 if __name__ == "__main__":
     # Specify whether the script should use Keras's ImageDataGenerator to augment the training dataset. Assigning
     # this variable to True will improve accuracy, but will also increase execution time.
     AUGMENT = True
+    #save_result = True
 
     # Specify how many folds in the k-fold validation process. Can be any integer greater than or equal to 2. Larger
     # integers will increase execution time.
@@ -339,5 +378,12 @@ if __name__ == "__main__":
         print('\n\nTraining Fold ' + str(i + 1) + ' of ' + str(NUM_FOLDS) + '\n')
         model = train_model(model, train_images[i], train_labels[i], test_images[i], test_labels[i])
         kth_fold_predictions = generate_predictions(model, test_images[i], test_labels[i])
-        predictions = predictions.append(kth_fold_predictions, ignore_index=True)
+        predictions = pd.concat([predictions, kth_fold_predictions], ignore_index=True)
     show_validation_results(predictions)
+    #predict_image(model)
+    '''
+    if save_result == True:
+        save_model_results("nasa")
+    '''
+# Default hyperparameter values: batch_size=64, epoch=100, optimiser=rmsprop, loss=mse, Augmentation=True, NUM_FOLDS=5
+# Hyperparameter values for model testing: epoch=10, NUM_FOLDS=2, Augmentation=False

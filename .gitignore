@@ -1,0 +1,5 @@
+CNN*model/Satellite*Imagery/
+CNN*model/images.npy
+CNN*model/labels.npy
+CNN*model/error_dist_by_category.png
+CNN*model/median_abs_error_by_category.png
