@@ -1,0 +1,57 @@
+[
+    {
+        "model": "intensity_app.stormdata",
+        "pk": 1,
+        "fields": {
+            "storm_id":1,
+            "storm_name": "Bill",
+            "intensity": 33.0,
+            "category": 1,
+            "latitude": 65.0,
+            "longitude": 95.0,
+            "origin_date": "2022-02-09",
+            "description": "first storm"
+        }
+    },
+    {
+        "model": "intensity_app.stormdata",
+        "pk": 2,
+        "fields": {
+            "storm_id":1,
+            "storm_name": "Claudette",
+            "intensity": 45.5,
+            "category": 2,
+            "latitude": 75.0,
+            "longitude": 97.0,
+            "origin_date": "2022-02-10",
+            "description": "second storm"
+        }
+    },
+    {
+        "model": "intensity_app.stormdata",
+        "pk": 3,
+        "fields": {
+            "storm_id":3,
+            "storm_name": "Danny",
+            "intensity": 345.0,
+            "category": 3,
+            "latitude": 80.0,
+            "longitude": 103.0,
+            "origin_date": "2022-02-10",
+            "description": "third"
+        }
+    },{
+        "model": "intensity_app.stormdata",
+        "pk": 4,
+        "fields": {
+            "storm_id":4,
+            "storm_name": "Elsa",
+            "intensity": 345.0,
+            "category": 1,
+            "latitude": 89.01,
+            "longitude": 98.0,
+            "origin_date": "2022-02-10",
+            "description": "Fourth"
+        }
+    }
+    ]

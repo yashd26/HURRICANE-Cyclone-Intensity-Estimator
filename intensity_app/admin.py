@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CycloneData
+from .models import StormData
 
 # Register your models here.
-admin.site.register(CycloneData)
+admin.site.register(StormData)

@@ -1,1 +1,8 @@
-<h1> Home </h1>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'intensity_app/home_style.css' %}">
+
+{% if storms %}
+    <h1> Home </h1>
+{% else %}
+    <h1>y<h1>
+{% endif %}
