@@ -1,1 +1,9 @@
-<h1> Explore </h1>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'intensity_app/explore_style.css' %}">
+
+{% if storms %}
+    <h1> Explore </h1>
+{% else %}
+    <h1>y<h1>
+{% endif %}
+<a href= "{% url 'url_name' %}?id={{ 1 }}">hello</a>
