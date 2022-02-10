@@ -7,8 +7,8 @@
             "storm_name": "Bill",
             "intensity": 33.0,
             "category": 1,
-            "latitude": 65.0,
-            "longitude": 95.0,
+            "latitude": 30.0,
+            "longitude": 50.0,
             "origin_date": "2022-02-09",
             "description": "first storm"
         }
@@ -21,8 +21,8 @@
             "storm_name": "Claudette",
             "intensity": 45.5,
             "category": 2,
-            "latitude": 75.0,
-            "longitude": 97.0,
+            "latitude": 25.0,
+            "longitude": 40.0,
             "origin_date": "2022-02-10",
             "description": "second storm"
         }
@@ -35,8 +35,8 @@
             "storm_name": "Danny",
             "intensity": 345.0,
             "category": 3,
-            "latitude": 80.0,
-            "longitude": 103.0,
+            "latitude": 50.0,
+            "longitude": 40.0,
             "origin_date": "2022-01-10",
             "description": "third"
         }
@@ -48,8 +48,8 @@
             "storm_name": "Elsa",
             "intensity": 345.0,
             "category": 1,
-            "latitude": 89.01,
-            "longitude": 98.0,
+            "latitude": 45.01,
+            "longitude": 25.0,
             "origin_date": "2022-01-15",
             "description": "Fourth"
         }
@@ -62,8 +62,8 @@
             "storm_name": "JohnySins",
             "intensity": 35.0,
             "category": 2,
-            "latitude": 100.0,
-            "longitude": -30.0,
+            "latitude": 20.0,
+            "longitude": 20.0,
             "origin_date": "2022-01-02",
             "description": "first storm"
         }
@@ -76,8 +76,8 @@
             "storm_name": "katrina",
             "intensity": 31.0,
             "category": 1,
-            "latitude": 65.0,
-            "longitude": 45.0,
+            "latitude": 45.0,
+            "longitude": 35.0,
             "origin_date": "2022-02-02",
             "description": "first storm"
         }
@@ -90,7 +90,7 @@
             "storm_name": "Bill",
             "intensity": 55.0,
             "category": 4,
-            "latitude": 75.0,
+            "latitude": 60.0,
             "longitude": 35.0,
             "origin_date": "2021-02-09",
             "description": "first storm"
@@ -104,8 +104,8 @@
             "storm_name": "tom",
             "intensity": 67.0,
             "category": 1,
-            "latitude": 110.0,
-            "longitude": -25.0,
+            "latitude": 70.0,
+            "longitude": 30.0,
             "origin_date": "2021-03-10",
             "description": "first storm"
         }
@@ -118,8 +118,8 @@
             "storm_name": "jerry",
             "intensity": 22.0,
             "category": 3,
-            "latitude": 120.0,
-            "longitude": 10.0,
+            "latitude": 20.0,
+            "longitude": 70.0,
             "origin_date": "2021-05-09",
             "description": "first storm"
         }
@@ -132,8 +132,8 @@
             "storm_name": "ramukaka",
             "intensity": 79.0,
             "category": 2,
-            "latitude": 95.0,
-            "longitude": 32.0,
+            "latitude": 50.0,
+            "longitude": 35.0,
             "origin_date": "2019-02-09",
             "description": "first storm"
         }
@@ -146,8 +146,8 @@
             "storm_name": "ranoutofnames",
             "intensity": 100.0,
             "category": 5,
-            "latitude": 125.0,
-            "longitude": -45.0,
+            "latitude": 75.0,
+            "longitude": 75.0,
             "origin_date": "2019-06-10",
             "description": "first storm"
         }
@@ -160,8 +160,8 @@
             "storm_name": "Billgates",
             "intensity": 75.0,
             "category": 3,
-            "latitude": 93.0,
-            "longitude": 34.0,
+            "latitude": 65.0,
+            "longitude": 65.0,
             "origin_date": "2019-01-09",
             "description": "first storm"
         }
@@ -174,8 +174,8 @@
             "storm_name": "amazon",
             "intensity": 37.0,
             "category": 2,
-            "latitude": 25.0,
-            "longitude": 95.0,
+            "latitude": 24.0,
+            "longitude": 15.0,
             "origin_date": "2021-08-09",
             "description": "first storm"
         }
@@ -188,8 +188,8 @@
             "storm_name": "Billy",
             "intensity": 55.0,
             "category": 2,
-            "latitude": 45.0,
-            "longitude": -45.0,
+            "latitude": 65.0,
+            "longitude": 30.0,
             "origin_date": "2019-10-09",
             "description": "first storm"
         }
@@ -202,10 +202,10 @@
             "storm_name": "doodles",
             "intensity": 56.0,
             "category": 2,
-            "latitude": 100.0,
-            "longitude": 30.0,
+            "latitude": 80.0,
+            "longitude": 20.0,
             "origin_date": "2021-01-15",
             "description": "first storm"
         }
     }
-    ]
+]

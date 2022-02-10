@@ -23,4 +23,8 @@ pip install matplotlib
 
 #### Database: POSTGRESQL
 
-### Super User (username: postgre, password: root)
+#### Super User (username: postgre, password: root)
+
+#### Database config (user: postgres, db_name: postgre, password: root)
+
+#### command to loaddata into database - python manage.py loaddata dumbdata.json --app intensity_app.Stormdata
