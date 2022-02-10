@@ -380,7 +380,7 @@ if __name__ == "__main__":
         kth_fold_predictions = generate_predictions(model, test_images[i], test_labels[i])
         predictions = pd.concat([predictions, kth_fold_predictions], ignore_index=True)
     show_validation_results(predictions)
-    predict_image(model)
+    #predict_image(model)
     '''
     if save_result == True:
         save_model_results("nasa")
