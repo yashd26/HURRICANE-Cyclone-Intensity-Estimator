@@ -154,15 +154,17 @@ def build_model():
     model.add(layers.Conv2D(64, (3, 3), activation='relu'))
     model.add(layers.MaxPooling2D((2, 2)))
     model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+    model.add(layers.MaxPooling2D((2, 2)))
+    model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+    model.add(layers.MaxPooling2D((2, 2)))
     model.add(layers.Flatten())
-    model.add(layers.Dropout(0.5))
     model.add(layers.Dense(64, activation='relu'))
     model.add(layers.Dense(16, activation='relu'))
     model.add(layers.Dense(1, activation=None))
 
     # Configure model optimization
     model.compile(
-        optimizer='rmsprop',
+        optimizer='adam',
         loss='mse',
         metrics=[metrics.MeanAbsoluteError(), metrics.RootMeanSquaredError()])
 
@@ -176,8 +178,8 @@ def train_model(model, train_images, train_labels, test_images, test_labels, sho
         train_images,
         train_labels,
         callbacks=[EarlyStopping(monitor='val_mean_absolute_error', patience=5, restore_best_weights=True)],
-        epochs=100,
-        batch_size=64,
+        epochs=50,
+        batch_size=60,
         validation_data=(test_images, test_labels))
 
     if show_performance_by_epoch:
@@ -365,11 +367,11 @@ if __name__ == "__main__":
     # Specify whether the script should use Keras's ImageDataGenerator to augment the training dataset. Assigning
     # this variable to True will improve accuracy, but will also increase execution time.
     AUGMENT = True
-    #save_result = True
+    save_result = True
 
     # Specify how many folds in the k-fold validation process. Can be any integer greater than or equal to 2. Larger
     # integers will increase execution time.
-    NUM_FOLDS = 5
+    NUM_FOLDS = 2
 
     train_images, train_labels, test_images, test_labels = read_and_prepare_data('k_fold', NUM_FOLDS, augment=AUGMENT)
     model = build_model()
@@ -381,9 +383,8 @@ if __name__ == "__main__":
         predictions = pd.concat([predictions, kth_fold_predictions], ignore_index=True)
     show_validation_results(predictions)
     #predict_image(model)
-    '''
     if save_result == True:
         save_model_results("nasa")
-    '''
+
 # Default hyperparameter values: batch_size=64, epoch=100, optimiser=rmsprop, loss=mse, Augmentation=True, NUM_FOLDS=5
 # Hyperparameter values for model testing: epoch=10, NUM_FOLDS=2, Augmentation=False
