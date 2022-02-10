@@ -5,17 +5,13 @@ def home(request):
     return render(request, 'intensity_app/home.html')
 
 def explore_all(request):
-    print("explore_all")
     context = {
-        'storms' : StormData.objects.all(),
+        'storms_list' : StormData.objects.all(),
     }    
     return render(request, 'intensity_app/explore.html' , context)
 
 def explore(request):
     return render(request,'intensity_app/explore.html')
-
-def readcontent(request): 
-    return render(request,'intensity_app/readcontent.html')
 
 def about(request):
     return render(request, 'intensity_app/about.html')
@@ -23,7 +19,7 @@ def about(request):
 def explore_by_name(request, name):
     storms = StormData.objects.filter(storm_name=name)
     context = {
-        "storms" : storms,
+        "storms_list" : storms,
     }
 
     return render(request,'intensity_app/explore.html', context=context)
@@ -31,7 +27,7 @@ def explore_by_name(request, name):
 def explore_by_year(request, year):
     storms = StormData.objects.filter(origin_date__year=year)
     context = {
-        "storms" : storms,
+        "storms_list" : storms,
     }
 
     return render(request,'intensity_app/explore.html', context=context)
@@ -40,7 +36,7 @@ def explore_by_month(request, year, month):
     storms = StormData.objects.filter(origin_date__year=year, 
         origin_date__month=month)
     context = {
-        "storms" : storms,
+        "storms_list" : storms,
     }
 
     return render(request,'intensity_app/explore.html', context=context)
@@ -50,15 +46,52 @@ def explore_by_date(request, year, month, date):
         origin_date__month=month, 
         origin_date__day=date)
     context = {
-        "storms" : storms,
+        "storms_list" : storms,
     }
 
     return render(request,'intensity_app/explore.html', context=context)
 
-def storm_detail(request):
-    storms = StormData.objects.filter(storm_id=request.GET['id'])
-    context = {
-        "storms" : storms,
-    }
-
-    return render(request,'intensity_app/explore.html', context=context)
+def storm_detail(request, id):
+    show_card = True
+    storms = StormData.objects.get(storm_id=id)
+    name = request.GET.get('name', '')
+    year = request.GET.get('year', '')
+    month = request.GET.get('month', '')
+    date = request.GET.get('date', '')
+    if name != '':
+        bg_storms = StormData.objects.filter(storm_name=name)
+        context = {
+            "storm" : storms,
+            "bg_storms_list": bg_storms,
+            "show_card": show_card,
+        }
+        return render(request,'intensity_app/explore.html', context=context)
+    if year != '' and month != '' and date != '':
+        storms = StormData.objects.filter(origin_date__year=year, 
+                    origin_date__month=month, 
+                    origin_date__day=date)
+        context = {
+            "storm" : storms,
+            "bg_storms_list": bg_storms,
+            "show_card": show_card,
+        }
+        return render(request,'intensity_app/explore.html', context=context)
+    if year != '' and month != '':
+        storms = StormData.objects.filter(
+            origin_date__year=year, 
+            origin_date__month=month
+        )
+        context = {
+            "storm" : storms,
+            "bg_storms_list": bg_storms,
+            "show_card": show_card,
+        }
+        return render(request,'intensity_app/explore.html', context=context)
+    if year != '':
+        storms = StormData.objects.filter(origin_date__year=year)
+        context = {
+            "storm" : storms,
+            "bg_storms_list": bg_storms,
+            "show_card": show_card,
+        }
+        return render(request,'intensity_app/explore.html', context=context)
