@@ -1,17 +1,3 @@
-# model.py
-# Written By Connor Cozad
-#
-# Purpose of this file:
-# This file builds and trains the neural network with the data processed by assemble.py. This file also validates the
-# model, telling the user how accurate it is.
-#
-# Outline of this file:
-# - Reads and augments images of hurricanes and their labels for use in convolutional neural network (CNN)
-# - Builds a CNN and trains it on those images and labels
-# - Validates the model using k-fold validation
-# - Prints MAE and saves two graphs that show additional details about the model's error
-
-
 import numpy as np
 import pandas as pd
 import seaborn as sns
@@ -27,8 +13,6 @@ with warnings.catch_warnings():
     from tensorflow.keras import layers
     from tensorflow.keras import metrics
     from tensorflow.keras.callbacks import EarlyStopping
-    from tensorflow.keras.preprocessing import image
-
 
 def read_and_prepare_data(validation_mode, k=5, augment=True):
 
@@ -74,7 +58,6 @@ def read_and_prepare_data(validation_mode, k=5, augment=True):
             train_images[i], test_images[i] = standardize_data(train_images[i], test_images[i])
 
         return train_images, train_labels, test_images, test_labels
-
 
 def augment_images(images, labels):
 
@@ -154,17 +137,15 @@ def build_model():
     model.add(layers.Conv2D(64, (3, 3), activation='relu'))
     model.add(layers.MaxPooling2D((2, 2)))
     model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-    model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-    model.add(layers.MaxPooling2D((2, 2)))
     model.add(layers.Flatten())
+    model.add(layers.Dropout(0.5))
     model.add(layers.Dense(64, activation='relu'))
     model.add(layers.Dense(16, activation='relu'))
     model.add(layers.Dense(1, activation=None))
 
     # Configure model optimization
     model.compile(
-        optimizer='adam',
+        optimizer='rmsprop',
         loss='mse',
         metrics=[metrics.MeanAbsoluteError(), metrics.RootMeanSquaredError()])
 
@@ -178,7 +159,7 @@ def train_model(model, train_images, train_labels, test_images, test_labels, sho
         train_images,
         train_labels,
         callbacks=[EarlyStopping(monitor='val_mean_absolute_error', patience=5, restore_best_weights=True)],
-        epochs=50,
+        epochs=100,
         batch_size=60,
         validation_data=(test_images, test_labels))
 
@@ -203,17 +184,19 @@ def performance_by_epoch(performance_log):
         new_row = {'epoch': epochs[i], 'train_or_test': 'train', 'loss_or_mae': 'loss', 'value': train_loss[i]}
         new_row = pd.DataFrame(new_row, index=[0])
         performance_df = pd.concat([performance_df, new_row], ignore_index=True)
-        new_row = {'epoch': [epochs[i]], 'train_or_test': ['test'], 'loss_or_mae': ['loss'], 'value': [test_loss[i]]}
+        new_row = {'epoch': epochs[i], 'train_or_test': 'test', 'loss_or_mae': 'loss', 'value': test_loss[i]}
         new_row = pd.DataFrame(new_row, index=[0])
         performance_df = pd.concat([performance_df, new_row], ignore_index=True)
-        new_row = {'epoch': [epochs[i]], 'train_or_test': ['train'], 'loss_or_mae': ['mae'], 'value': [train_mae[i]]}
+        new_row = {'epoch': epochs[i], 'train_or_test': 'train', 'loss_or_mae': 'mae', 'value': train_mae[i]}
         new_row = pd.DataFrame(new_row, index=[0])
         performance_df = pd.concat([performance_df, new_row], ignore_index=True)
-        new_row = {'epoch': [epochs[i]], 'train_or_test': ['test'], 'loss_or_mae': ['mae'], 'value': [test_mae[i]]}
+        new_row = {'epoch': epochs[i], 'train_or_test': 'test', 'loss_or_mae': 'mae', 'value': test_mae[i]}
         new_row = pd.DataFrame(new_row, index=[0])
         performance_df = pd.concat([performance_df, new_row], ignore_index=True)
     performance_df = performance_df.astype({'epoch': np.int64})
+    print(performance_df)
 
+    '''
     # Plot metrics on graph, fitted with exponential decay curves
     lm = sns.lmplot(
         x='epoch',
@@ -229,7 +212,7 @@ def performance_by_epoch(performance_log):
     min_mae = performance_df.loc[performance_df.loss_or_mae == 'mae']['value'].min()
     axes[1, 0].set_ylim(min_mae - min_mae * 0.2, max_mae + max_mae * 0.2)
     plt.show()
-
+    '''
 
 def generate_predictions(model, test_images, test_labels):
 
@@ -250,6 +233,7 @@ def generate_predictions(model, test_images, test_labels):
         new_row = pd.DataFrame(new_row, index=[0])
         processed_predictions = pd.concat([processed_predictions, new_row], ignore_index=True)
         print_progress('Processing Predictions', i + 1, len(raw_predictions))
+        print(f"prediction: {raw_predictions[i]} and diff: {abs_error}")
 
     return processed_predictions
 
@@ -356,18 +340,23 @@ def save_model_results(*argv):
     file.writelines(content)
     file.close()
 
-def predict_image(model, img_path="./test_image/image1.jpg"):
-    img = image.load_img(img_path, target_size=(50, 50), grayscale=True)
-    img_array = image.img_to_array(img)
-    img_batch = np.expand_dims(img_array, axis=0)
-    prediction = model.predict(img_batch)
-    print(prediction)
+def predict_image(model):
+    images = np.load('images.npy')
+    labels = np.load('labels.npy')
+    for x in range(10):
+        print(images[x].shape)
+        image = np.reshape(images[x], (images[x].shape[0], images[x].shape[1]))
+        print(image.shape)
+        image = np.expand_dims(image, axis=0)
+        print(image.shape)
+        print(model.predict(image))
+        print(labels[x])
 
 if __name__ == "__main__":
     # Specify whether the script should use Keras's ImageDataGenerator to augment the training dataset. Assigning
     # this variable to True will improve accuracy, but will also increase execution time.
     AUGMENT = True
-    save_result = True
+    save_result = False
 
     # Specify how many folds in the k-fold validation process. Can be any integer greater than or equal to 2. Larger
     # integers will increase execution time.
@@ -382,9 +371,9 @@ if __name__ == "__main__":
         kth_fold_predictions = generate_predictions(model, test_images[i], test_labels[i])
         predictions = pd.concat([predictions, kth_fold_predictions], ignore_index=True)
     show_validation_results(predictions)
-    #predict_image(model)
-    if save_result == True:
-        save_model_results("nasa")
+    predict_image(model)
+    if save_result:
+        save_model_results("")
 
 # Default hyperparameter values: batch_size=64, epoch=100, optimiser=rmsprop, loss=mse, Augmentation=True, NUM_FOLDS=5
 # Hyperparameter values for model testing: epoch=10, NUM_FOLDS=2, Augmentation=False

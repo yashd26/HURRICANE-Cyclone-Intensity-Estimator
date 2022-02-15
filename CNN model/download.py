@@ -1,15 +1,3 @@
-# download.py
-# Written By Connor Cozad
-#
-# Purpose of this file:
-# This file downloads the satellite images which will then be processed in assemble.py
-#
-# Outline of this file:
-# - Loops through each year and downloads .tar.gz files containing satellite images for Atlantic and Pacific hurricanes
-# - Only extracts files from the .tar.gz files that contain images of hurricanes that we know the wind speed of
-# - When script is finished, the Satellite Imagery folder contains all netcdf files, which hold the satellite images
-
-
 import os
 import pandas as pd
 import requests

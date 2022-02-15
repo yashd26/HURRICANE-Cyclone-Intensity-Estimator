@@ -1,9 +1,5 @@
 # Convolutional Neural Network (CNN) for Estimating Tropical Cyclone Wind Intensity Through Infrared Satellite Imagery
 This repo contains the code to download and prepare data to train and validate a convolutional neural network. The neural network takes a satellite image of a tropical cyclone as an input and output an estimate for the tropical cyclone’s maximum sustained wind speed.
-## Project Background and Motivation
-Since hurricanes are typically located over large bodies of water where weather stations are sparse, meteorologists often have to estimate the wind speed of hurricanes. They usually use buoy observations, microwave satellite imagery, and infrared satellite imagery to make these estimates.
-
-There is growing interest in applying AI and machine learning techniques to improve the accuracy of operational meteorological tasks, including estimating hurricane wind speed. I began looking into applying deep learning to hurricane wind speed estimation during the COVID-19 pandemic when the American Meteorological Society (AMS) made their journal articles publicly available at no cost. <a href="https://journals.ametsoc.org/mwr/article/147/6/2261/344590/Using-Deep-Learning-to-Estimate-Tropical-Cyclone">Wimmers et al. 2019</a> and <a href="https://journals.ametsoc.org/waf/article/34/2/447/291/Estimating-Tropical-Cyclone-Intensity-by-Satellite">Chen et al. 2019</a> both applied deep learning to hurricane wind speed estimation, achieving considerable accuracy. This piqued my interest, so I decided to take a stab at it.
 ## Data Sources
 Used hurricanes from the <a href="https://www.ncdc.noaa.gov/hursat/">HURSAT data project</a> run by the National Centers for Environmental Information. This database contains satellite images of hurricanes in NetCDF file format. The center of each hurricane was in the middle of each image.
 

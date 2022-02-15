@@ -44,7 +44,7 @@
     <nav class="navbar">
       <div class="nav-center">
         <div class="nav-logo">
-         <span>Hurri</span>Cane.
+         <a href="/home"><span>Hurri</span>Cane.</a>
         </div>
         <div class="nav-links">
           <a href="#" class="nav-link">Explore</a>
@@ -52,7 +52,7 @@
         </div>
       </div>
     </nav>
-    <div id="map" style="width: 100%; height: calc(100vh - 4rem)"></div>
+    <div id="map" style="width: 100%; height: calc(100vh - 4rem); "></div>
     <div class="btn" id="btn">
       <img src={% static './intensity_app/images/gear.png' %} alt="">
     </div>
@@ -85,13 +85,20 @@
       {% if show_card %}
       <div class="map-card" id = "myDiv">
         <div class="container">
-          <div class = "cross_btn">
-          <button onclick="myFunction()" id = "close"></button>
+            <h4 class = "storm-name"><b>Cyclone {{ storm.storm_name }}</b></h4>
+            <h5 class = "map-date">{{ storm.origin_date }}</h5>
+            <button onclick="history.back()" class = "close"><b>X</b></button>
           </div>
-          <h4><b>Wind speed</b></h4>
-          <p>Data of wind intensity are shown here.{{ storm.storm_id }}</p>
-        </div>
+          <div class = "wind-data">
+            <h6 class = "wind-head">Est. Wind intensity : {{ storm.intensity }}    Kn</h6>
+            <h6 class = "wind-head">latitude : {{ storm.latitude }} </h6>
+            <h6 class = "wind-head">longitude : {{ storm.longitude }}</h6>
+          </div>
+           <div class = "images">
+          <img src= "https://eoimages.gsfc.nasa.gov/images/imagerecords/83000/83486/CycloneIta_amo_2014101_tn.jpg" style="width:100%">
+           </div>
       </div>
+      
       {% endif %}
     </div>
     <script>
@@ -102,6 +109,7 @@
         });
         });
 
+        
           const btn = document.getElementById('btn');
           const control = document.querySelector('.map-controls')
 
@@ -125,16 +133,22 @@
 
       {% for data in storms_list %}
       var el = document.createElement('div');
-      el.innerHTML = "{{data.storm_name}}";
       el.setAttribute("id","marker");
-      el.style.cssText="font-size:18px; color:#fff; cursor:pointer;"
+      el.style.cssText="font-size:18px; color:rgb(0, 35, 58); cursor:pointer;"
 
       var img = document.createElement('img');
       img.setAttribute("id","img");
-      img.src="https://pngimg.com/uploads/hurricane/hurricane_PNG42.png";
+      img.src="https://pngimg.com/uploads/hurricane/hurricane_PNG13.png";
       img.style.width="50px"
 
       el.appendChild(img);
+
+      var title = document.createElement('span');
+      title.setAttribute("id","title");
+      title.textContent="{{data.storm_name}}"
+      title.style.cssText="background-color:rgb(235, 235, 235); padding:5px 10px; font-size:18px; border-radius:5px; letter-spacing:1px; position:absolute";
+
+      el.appendChild(title);
 
       var marker1 = new mapboxgl.Marker(el)
       .setLngLat([{{ data.longitude }}, {{data.latitude}}])

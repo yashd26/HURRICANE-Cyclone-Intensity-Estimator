@@ -1,16 +1,3 @@
-# assemble.py
-# Written By Connor Cozad
-#
-# Purpose of this file:
-# This file takes the satellite image files downloaded from download.py and turns them into NumPy arrays that will be
-# fed to the neural network in model.py
-#
-# Outline of this file:
-# - Crops each satellite image
-# - Matches each satellite image of a hurricane with the maximum sustained wind speed of that hurricane
-# - Collects these images and their associated labels in arrays and saves them as numpy files
-
-
 import pandas as pd
 import numpy as np
 import os

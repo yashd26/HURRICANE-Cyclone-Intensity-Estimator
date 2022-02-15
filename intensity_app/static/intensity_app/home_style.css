@@ -9,7 +9,7 @@ body{
 }
 
 .container{
-  background:linear-gradient(rgba(0,0,0,0.5),rgba(0, 13, 54, 0.904)), url("{% static './images/bg.jpg' %}");
+  background:linear-gradient(rgba(0,0,0,0.5),rgba(0, 13, 54, 0.904)), url(./images/bg.jpg);
   height: calc(100vh - 4rem);
   background-size: cover;
   background-position: center;
