@@ -83,15 +83,24 @@
         </div>
       </div>
       {% if show_card %}
-      <div class="map-card">
+      <div class="map-card" id = "myDiv">
         <div class="container">
+          <div class = "cross_btn">
+          <button onclick="myFunction()" id = "close"></button>
+          </div>
           <h4><b>Wind speed</b></h4>
-          <p>wind speed dekh lo bhaiyon {{ storm.storm_id }}</p>
+          <p>Data of wind intensity are shown here.{{ storm.storm_id }}</p>
         </div>
       </div>
       {% endif %}
     </div>
     <script>
+      
+      $(document).ready(function(){
+          $("button").click(function(){
+        $("#myDiv").slideToggle();
+        });
+        });
 
           const btn = document.getElementById('btn');
           const control = document.querySelector('.map-controls')
