@@ -7,12 +7,14 @@ import gc
 import os
 import glob
 import shutil
+import time
 with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=FutureWarning)
     from tensorflow.keras import models
     from tensorflow.keras import layers
     from tensorflow.keras import metrics
     from tensorflow.keras.callbacks import EarlyStopping
+    from tensorflow.keras.models import load_model
 
 def read_and_prepare_data(validation_mode, k=5, augment=True):
 
@@ -133,10 +135,11 @@ def build_model():
     # Build network architecture
     model = models.Sequential()
     model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(50, 50, 1)))
-    model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-    model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+    model.add(layers.BatchNormalization(axis=1))
+    #model.add(layers.MaxPooling2D((2, 2)))
+    model.add(layers.Conv2D(64, (3, 3), (2, 2), activation='relu'))
+    #model.add(layers.MaxPooling2D((2, 2)))
+    model.add(layers.Conv2D(64, (3, 3), (3, 3), activation='relu'))
     model.add(layers.Flatten())
     model.add(layers.Dropout(0.5))
     model.add(layers.Dense(64, activation='relu'))
@@ -147,13 +150,14 @@ def build_model():
     model.compile(
         optimizer='rmsprop',
         loss='mse',
-        metrics=[metrics.MeanAbsoluteError(), metrics.RootMeanSquaredError()])
+        metrics=[metrics.MeanAbsoluteError(), metrics.RootMeanSquaredError()]
+    )
 
     return model
 
 
 def train_model(model, train_images, train_labels, test_images, test_labels, show_performance_by_epoch=False):
-
+    start = time.process_time()
     # Run model and get metrics for each epoch
     performance_log = model.fit(
         train_images,
@@ -163,11 +167,12 @@ def train_model(model, train_images, train_labels, test_images, test_labels, sho
         batch_size=60,
         validation_data=(test_images, test_labels))
 
+    print(time.process_time() - start)
+
     if show_performance_by_epoch:
         performance_by_epoch(performance_log)
 
     return model
-
 
 def performance_by_epoch(performance_log):
 
@@ -295,6 +300,12 @@ def standardize_data(train_images, test_images):
     test_images = np.divide(np.subtract(test_images, mean), st_dev)
     return train_images, test_images
 
+def standardize_data1(test_images):
+    test_images[test_images < 0] = 0
+    st_dev = np.std(test_images)
+    mean = np.mean(test_images)
+    test_images = np.divide(np.subtract(test_images, mean), st_dev)
+    return test_images
 
 def print_progress(action, progress, total):
     percent_progress = round((progress / total) * 100, 1)
@@ -340,23 +351,45 @@ def save_model_results(*argv):
     file.writelines(content)
     file.close()
 
-def predict_image(model):
+def predict_image():
+    '''
+    from tensorflow.keras.preprocessing import image
+
+    images = image.load_img("./test_image/image1.jpg", color_mode='grayscale', target_size=(50, 50))
+    images = image.img_to_array(images)
+    print(images.shape)
+    images = np.expand_dims(images, axis=0)
+    print(images.shape)
+    images = standardize_data1(images)
+    print(model.predict(images))
+    '''
+    model = load_model('Model.h5')
+    model.compile(
+        optimizer='rmsprop',
+        loss='mse',
+        metrics=[metrics.MeanAbsoluteError(), metrics.RootMeanSquaredError()]
+    )
     images = np.load('images.npy')
     labels = np.load('labels.npy')
+    image = []
     for x in range(10):
-        print(images[x].shape)
-        image = np.reshape(images[x], (images[x].shape[0], images[x].shape[1]))
-        print(image.shape)
-        image = np.expand_dims(image, axis=0)
-        print(image.shape)
-        print(model.predict(image))
-        print(labels[x])
+        image.append(images[x])
+        print(f"labels{x}: {labels[x]}")
+
+    image = np.array(image)
+    image = standardize_data1(image)
+    image = model.predict(image)
+    image = image.flatten()
+
+    for i in range(len(image)):
+        print(f"images{i}: {image[i]}")
 
 if __name__ == "__main__":
     # Specify whether the script should use Keras's ImageDataGenerator to augment the training dataset. Assigning
     # this variable to True will improve accuracy, but will also increase execution time.
     AUGMENT = True
     save_result = False
+    save_model = True
 
     # Specify how many folds in the k-fold validation process. Can be any integer greater than or equal to 2. Larger
     # integers will increase execution time.
@@ -367,13 +400,20 @@ if __name__ == "__main__":
     predictions = pd.DataFrame(columns=['prediction', 'actual', 'abs_error', 'category'])
     for i in range(NUM_FOLDS):
         print('\n\nTraining Fold ' + str(i + 1) + ' of ' + str(NUM_FOLDS) + '\n')
+        print(test_images[i].shape)
         model = train_model(model, train_images[i], train_labels[i], test_images[i], test_labels[i])
+        print(test_images[i].shape)
         kth_fold_predictions = generate_predictions(model, test_images[i], test_labels[i])
         predictions = pd.concat([predictions, kth_fold_predictions], ignore_index=True)
     show_validation_results(predictions)
-    predict_image(model)
     if save_result:
-        save_model_results("")
+        save_model_results("novel")
+    if save_model:
+        model.save('Model.h5')
+        del model
+        print('Model Saved!')
 
 # Default hyperparameter values: batch_size=64, epoch=100, optimiser=rmsprop, loss=mse, Augmentation=True, NUM_FOLDS=5
 # Hyperparameter values for model testing: epoch=10, NUM_FOLDS=2, Augmentation=False
+
+predict_image()

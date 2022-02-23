@@ -13,7 +13,7 @@ def show_format_images():
         print(images[i].shape)
         image = np.reshape(images[i], (images[i].shape[0], images[i].shape[1]))
         print(image.shape)
-        plt.imshow(image)
+        plt.imshow(image, cmap="binary")
         plt.title('Image #' + str(i) + '   ' + str(labels[i]) + ' knots')
         plt.show()
 
@@ -31,6 +31,8 @@ def show_cdf_images():
     topo = nc.variables['IRWIN'][0]
 
     # make image
-    plt.imshow(topo)
+    plt.imshow(topo, cmap="binary")
     plt.title(nc.title)
     plt.show()
+
+show_cdf_images()

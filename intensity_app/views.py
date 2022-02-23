@@ -1,10 +1,18 @@
 from django.shortcuts import render
 from .models import StormData
+from django.http import JsonResponse
 
 def home(request):
     return render(request, 'intensity_app/home.html')
 
 def explore(request):
+    if 'term' in request.GET:
+        qs = StormData.objects.filter(storm_name__istartswith= request.GET.get('term'))
+        titles = list()
+        for product in qs:
+            titles.append(product.storm_name)
+            return JsonResponse(titles,safe=False)
+
     id = request.GET.get('id', '')
     name = request.GET.get('name', '')
     year = request.GET.get('year', '')
@@ -51,6 +59,13 @@ def explore(request):
         pass
 
 def explore_all(request):
+    if 'term' in request.GET:
+        qs = StormData.objects.filter(storm_name__istartswith= request.GET.get('term'))
+        titles = list()
+        for product in qs:
+            titles.append(product.storm_name)
+            return JsonResponse(titles,safe=False)
+
     id = request.GET.get('id', '')
     
     context = {

@@ -78,4 +78,6 @@ images = images.reshape((images.shape[0], side_length, side_length, 1))
 np.save('images.npy', images)
 np.save('labels.npy', labels)
 
+print(images.shape)
+
 print("\nNumPy files saved. Processing complete.")

@@ -12,6 +12,7 @@
       href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
@@ -71,7 +72,8 @@
         <div class="search-name">
           <p>Search by name</p>
           <form action="http://127.0.0.1:8000/explore/" method="GET">
-            <input type="text" placeholder="search hurricane" name="name" />
+            <label for="product"></label>
+            <input type="text" id="product" placeholder="search hurricane" name="name" />
           </form>
         </div>
         <div class="margin"></div>
@@ -101,6 +103,17 @@
       
       {% endif %}
     </div>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+      $(function() {
+      $( "input#product" ).autocomplete(
+      {
+        source: '{% url 'explore_all' %}',
+         minLength: 1,
+      })
+      });
+    </script>
     <script>
       
       $(document).ready(function(){
