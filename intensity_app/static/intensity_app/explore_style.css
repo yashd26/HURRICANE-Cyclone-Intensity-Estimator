@@ -127,7 +127,6 @@ input {
 }
 
 .map-card {
-  transition: 0.3s;
   width: 32%;
   height: 75%;
   position: fixed;
