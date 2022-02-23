@@ -75,6 +75,9 @@ def explore_all(request):
     }   
     return render(request, 'intensity_app/explore.html' , context)
 
+def explore_active(request):
+    return render(request, 'intensity_app/explore.html')
+
 def about(request):
     return render(request, 'intensity_app/about.html')
 
