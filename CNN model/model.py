@@ -137,9 +137,9 @@ def build_model():
     model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(50, 50, 1)))
     model.add(layers.BatchNormalization(axis=1))
     #model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (3, 3), (2, 2), activation='relu'))
+    model.add(layers.Conv2D(64, (3, 3), activation='relu'))
     #model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (3, 3), (3, 3), activation='relu'))
+    model.add(layers.Conv2D(64, (3, 3), activation='relu'))
     model.add(layers.Flatten())
     model.add(layers.Dropout(0.5))
     model.add(layers.Dense(64, activation='relu'))
@@ -389,7 +389,7 @@ if __name__ == "__main__":
     # this variable to True will improve accuracy, but will also increase execution time.
     AUGMENT = True
     save_result = False
-    save_model = True
+    save_model = False
 
     # Specify how many folds in the k-fold validation process. Can be any integer greater than or equal to 2. Larger
     # integers will increase execution time.
@@ -416,4 +416,4 @@ if __name__ == "__main__":
 # Default hyperparameter values: batch_size=64, epoch=100, optimiser=rmsprop, loss=mse, Augmentation=True, NUM_FOLDS=5
 # Hyperparameter values for model testing: epoch=10, NUM_FOLDS=2, Augmentation=False
 
-predict_image()
+#predict_image()
