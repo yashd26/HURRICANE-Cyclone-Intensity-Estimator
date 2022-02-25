@@ -134,12 +134,12 @@ def build_model():
 
     # Build network architecture
     model = models.Sequential()
-    model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(50, 50, 1)))
+    model.add(layers.Conv2D(32, (1, 1), activation='relu', input_shape=(50, 50, 1)))
     model.add(layers.BatchNormalization(axis=1))
     #model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+    model.add(layers.Conv2D(64, (1, 1), activation='relu'))
     #model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+    model.add(layers.Conv2D(64, (1, 1), activation='relu'))
     model.add(layers.Flatten())
     model.add(layers.Dropout(0.5))
     model.add(layers.Dense(64, activation='relu'))
@@ -384,9 +384,104 @@ def predict_image():
     for i in range(len(image)):
         print(f"images{i}: {image[i]}")
 
+def save_database():
+    import psycopg2
+    import datetime
+
+    model = load_model('Model.h5')
+    model.compile(
+        optimizer='rmsprop',
+        loss='mse',
+        metrics=[metrics.MeanAbsoluteError(), metrics.RootMeanSquaredError()]
+    )
+    intensity_arr = []
+    category_arr = []
+    label = []
+
+    images = np.load('images.npy')
+    labels = np.load('labels.npy')
+    labels = labels.astype('float64')
+
+    image = []
+    for x in range(len(images)):
+        image.append(images[x])
+        label.append(labels[x])
+
+    image = np.array(image)
+    image = standardize_data1(image)
+    intensity = model.predict(image)
+    intensity = intensity.flatten()
+    intensity = intensity.astype('float64')
+
+    for x in range(len(intensity)):
+        intensity_arr.append(intensity[x])
+
+        if labels[x] <= 33:
+            category_arr.append(1)
+        elif labels[x] <= 64:
+            category_arr.append(2)
+        elif labels[x] <= 83:
+            category_arr.append(3)
+        elif labels[x] <= 95:
+            category_arr.append(4)
+        elif labels[x] <= 113:
+            category_arr.append(5)
+        elif labels[x] <= 134:
+            category_arr.append(6)
+        else:
+            category_arr.append(7)
+
+    conn = psycopg2.connect(user="postgres",
+                            password="root",
+                            host="127.0.0.1",
+                            port="5432",
+                            database="postgre")
+    cur = conn.cursor()
+    cur.execute("DELETE FROM intensity_app_stormdata;")
+    cur.execute("DELETE FROM intensity_app_stormtrack;")
+
+    index = 0
+    id = 1
+    for filename in os.listdir("Satellite Imagery"):
+        storm_name = filename.split(".")[1]
+        time = filename.split(".")[5]
+        time1 = ""
+        for i in time:
+            if i != "0":
+                time1 = time1 + i
+            else:
+                continue
+        if time1 == "":
+            time1 = "0"
+        date = filename.split(".")[2] + filename.split(".")[3] + filename.split(".")[4]
+        latitude = filename[8:10]
+        longitude = filename[10:13]
+        date = datetime.datetime(int(date[0:4]), int(date[4:6]), int(date[6:8]), int(time1))
+
+        cur.execute(f"SELECT * FROM intensity_app_stormdata WHERE storm_name = '{storm_name}';")
+        storm_exists = cur.fetchall()
+        if storm_exists:
+            cur.execute(f"""INSERT INTO intensity_app_stormtrack (intensity, labels, latitude, longitude, date, storm_data_id) VALUES (%s, %s, %s, %s, %s, %s);""", (intensity_arr[index], label[index], latitude, longitude, date, storm_exists[0][0]))
+            conn.commit()
+        else:
+            cur.execute(f"""INSERT INTO intensity_app_stormdata (storm_id, storm_name, category) VALUES (%s, %s, %s);""", (id, storm_name, category_arr[index]))
+            conn.commit()
+            cur.execute(f"""INSERT INTO intensity_app_stormtrack (intensity, labels, latitude, longitude, date, storm_data_id) VALUES (%s, %s, %s, %s, %s, %s);""", (intensity_arr[index], label[index], latitude, longitude, date, id))
+            conn.commit()
+            id = id + 1
+
+        index = index + 1
+
+    if (conn):
+        cur.close()
+        conn.close()
+        print("PostgreSQL connection is closed")
+
 if __name__ == "__main__":
+    '''
     # Specify whether the script should use Keras's ImageDataGenerator to augment the training dataset. Assigning
     # this variable to True will improve accuracy, but will also increase execution time.
+    save_database = False
     AUGMENT = True
     save_result = False
     save_model = False
@@ -417,3 +512,7 @@ if __name__ == "__main__":
 # Hyperparameter values for model testing: epoch=10, NUM_FOLDS=2, Augmentation=False
 
 #predict_image()
+
+if save_database:
+    '''
+    save_database()

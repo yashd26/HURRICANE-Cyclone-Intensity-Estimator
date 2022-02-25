@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import StormData
+from .models import *
 from django.http import JsonResponse
 
 def home(request):
@@ -37,7 +37,7 @@ def explore(request):
         month = datetime.datetime.strptime(month_name, '%B').month
         year = startDate.split(" ")[1]
 
-        bg_storms = StormData.objects.filter(origin_date__year=year, origin_date__month=month)
+        bg_storms = StormTrack.objects.filter(date__year=year, date__month=month)
         context = {
             "storm" : StormData.objects.get(storm_id=id) if id != '' else None,
             "storms_list": bg_storms,
@@ -46,7 +46,7 @@ def explore(request):
         return render(request,'intensity_app/explore.html', context=context)
     
     elif year != '':
-        bg_storms = StormData.objects.filter(origin_date__year=year)
+        bg_storms = StormTrack.objects.filter(date__year=year)
         context = {
             "storm" : StormData.objects.get(storm_id=id) if id != '' else None,
             "storms_list": bg_storms,

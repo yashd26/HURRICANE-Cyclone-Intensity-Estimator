@@ -4,7 +4,6 @@ import requests
 from bs4 import BeautifulSoup
 import tarfile
 
-
 def download_hursat(years):
     # Reads in the Best Track dataset, which contain records of the location and maximum wind speed of every recorded
     # hurricane in the Atlantic and Eastern/Central Pacific basins
@@ -79,7 +78,6 @@ def download_hursat(years):
 def print_progress(action, progress, total):
     percent_progress = round((progress / total) * 100, 1)
     print('\r' + action + '... ' + str(percent_progress) + '% (' + str(progress) + ' of ' + str(total) + ')', end='')
-
 
 if __name__ == "__main__":
     # Specify a list of years. Satellite images of hurricanes from those years will be downloaded. More years will
