@@ -155,7 +155,6 @@ def build_model():
 
     return model
 
-
 def train_model(model, train_images, train_labels, test_images, test_labels, show_performance_by_epoch=False):
     start = time.process_time()
     # Run model and get metrics for each epoch
@@ -387,6 +386,8 @@ def predict_image():
 def save_database():
     import psycopg2
     import datetime
+    from PIL import Image as im
+    import netCDF4
 
     model = load_model('Model.h5')
     model.compile(
@@ -468,6 +469,14 @@ def save_database():
             conn.commit()
             cur.execute(f"""INSERT INTO intensity_app_stormtrack (intensity, labels, latitude, longitude, date, storm_data_id) VALUES (%s, %s, %s, %s, %s, %s);""", (intensity_arr[index], label[index], latitude, longitude, date, id))
             conn.commit()
+            url = f"Satellite Imagery/{filename}"
+            nc = netCDF4.Dataset(url)
+            '''
+            data = im.fromarray(nc.variables['IRWIN'][0])
+            data = data.convert("L")
+            data.save(f'../media/images{id}.png')
+            '''
+            plt.imsave(f'../media/images{id}.png', nc.variables['IRWIN'][0], cmap="binary")
             id = id + 1
 
         index = index + 1
@@ -478,7 +487,6 @@ def save_database():
         print("PostgreSQL connection is closed")
 
 if __name__ == "__main__":
-    '''
     # Specify whether the script should use Keras's ImageDataGenerator to augment the training dataset. Assigning
     # this variable to True will improve accuracy, but will also increase execution time.
     save_database = False
@@ -512,7 +520,7 @@ if __name__ == "__main__":
 # Hyperparameter values for model testing: epoch=10, NUM_FOLDS=2, Augmentation=False
 
 #predict_image()
-
+'''
 if save_database:
-    '''
     save_database()
+'''

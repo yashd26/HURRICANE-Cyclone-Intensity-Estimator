@@ -62,16 +62,16 @@
         <div class="search-year">
           <p>View by season</p>
           <div class="seasons">
-            <a href={% url "explore_all" %} class="season">Show All</a>
-            <a href={% url "explore" %}?year=2020 class="season">2020</a>
-            <a href={% url "explore" %}?year=2019 class="season">2019</a>
-            <a href={% url "explore" %}?year=2018 class="season">2018</a>
+            <a onClick="ajax_func(event)" class="season">Show All</a>
+            <a onClick="ajax_func(event)" class="season">2020</a>
+            <a onClick="ajax_func(event)" class="season">2019</a>
+            <a onClick="ajax_func(event)" class="season">2018</a>
           </div>
         </div>
         <div class="margin"></div>
         <div class="search-name">
           <p>Search by name</p>
-          <form action="http://127.0.0.1:8000/explore/" method="GET">
+          <form onSubmit="ajax_func(event)">
             <label for="product"></label>
             <input type="text" id="product" placeholder="search hurricane" name="name" />
           </form>
@@ -79,7 +79,7 @@
         <div class="margin"></div>
         <div class="search-date">
           <p>Search by date</p>
-          <form action="http://127.0.0.1:8000/explore/">
+          <form onSubmit="ajax_func(event)">
             <input name="startDate" id="startDate" class="date-picker" />
           </form>
         </div>
@@ -208,6 +208,23 @@
       map.on('mouseleave', 'circle', () => {
       map.getCanvas().style.cursor = '';
       });
+
+      function ajax_func(e) {
+        var params = ""
+        if (e.target.class === "season") {
+          params = e.target.value;
+        }
+        axios.get('http://127.0.0.1:8000/explore', {
+          params: {
+            ID: params
+          }
+        })
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+      }
     </script>
   </body>
 </html>

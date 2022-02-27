@@ -25,7 +25,6 @@ def show_cdf_images():
 
     # examine the variables
     print(nc.variables.keys())
-    print(nc.variables['IRWIN'][0])
     print(nc.variables['IRWIN'][0].shape)
 
     topo = nc.variables['IRWIN'][0]
