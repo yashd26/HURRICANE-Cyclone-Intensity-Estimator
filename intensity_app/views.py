@@ -37,7 +37,7 @@ def explore(request):
         month = datetime.datetime.strptime(month_name, '%B').month
         year = startDate.split(" ")[1]
 
-        bg_storms = StormData.objects.filter(date__year=year, date__month=month)
+        bg_storms = StormTrack.objects.filter(date__year=year, date__month=month).only("storm_data")
         context = {
             "storm" : StormData.objects.get(storm_id=id) if id != '' else None,
             "storms_list": bg_storms,
@@ -46,7 +46,7 @@ def explore(request):
         return render(request,'intensity_app/explore.html', context=context)
     
     elif year != '':
-        bg_storms = StormData.objects.filter(date__year=year)
+        bg_storms = StormTrack.objects.filter(date__year=year).only("storm_data")
         context = {
             "storm" : StormData.objects.get(storm_id=id) if id != '' else None,
             "storms_list": bg_storms,
