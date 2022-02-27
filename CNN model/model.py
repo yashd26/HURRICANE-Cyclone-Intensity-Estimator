@@ -387,8 +387,8 @@ def predict_image():
 def save_database():
     import psycopg2
     import datetime
-    from PIL import Image as im
-    import netCDF4
+    #from PIL import Image as im
+    #import netCDF4
 
     model = load_model('Model.h5')
     model.compile(
@@ -472,9 +472,12 @@ def save_database():
             conn.commit()
             url = f"Satellite Imagery/{filename}"
             nc = netCDF4.Dataset(url)
+            '''
             data = im.fromarray(nc.variables['IRWIN'][0])
             data = data.convert("L")
             data.save(f'../media/images{id}.png')
+            '''
+            plt.imsave(f'../media/images{id}.png', nc.variables['IRWIN'][0], cmap="binary")
             id = id + 1
 
         index = index + 1
