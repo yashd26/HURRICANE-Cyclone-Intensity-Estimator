@@ -387,6 +387,8 @@ def predict_image():
 def save_database():
     import psycopg2
     import datetime
+    from PIL import Image as im
+    import netCDF4
 
     model = load_model('Model.h5')
     model.compile(
@@ -468,6 +470,11 @@ def save_database():
             conn.commit()
             cur.execute(f"""INSERT INTO intensity_app_stormtrack (intensity, labels, latitude, longitude, date, storm_data_id) VALUES (%s, %s, %s, %s, %s, %s);""", (intensity_arr[index], label[index], latitude, longitude, date, id))
             conn.commit()
+            url = f"Satellite Imagery/{filename}"
+            nc = netCDF4.Dataset(url)
+            data = im.fromarray(nc.variables['IRWIN'][0])
+            data = data.convert("L")
+            data.save(f'../media/images{id}.png')
             id = id + 1
 
         index = index + 1
