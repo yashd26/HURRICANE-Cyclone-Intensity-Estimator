@@ -40,6 +40,7 @@
     </style>
 
     <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
   <body>
     <nav class="navbar">
@@ -62,16 +63,16 @@
         <div class="search-year">
           <p>View by season</p>
           <div class="seasons">
-            <a onClick="ajax_func(event)" class="season">Show All</a>
-            <a onClick="ajax_func(event)" class="season">2020</a>
-            <a onClick="ajax_func(event)" class="season">2019</a>
-            <a onClick="ajax_func(event)" class="season">2018</a>
+            <a onClick="return filter_all(event)" id="season" class="season">Show All</a>
+            <a onClick="return year_filter(event)" id="season" class="season">2020</a>
+            <a onClick="return year_filter(event)" id="season" class="season">2019</a>
+            <a onClick="return year_filter(event)" id="season" class="season">2018</a>
           </div>
         </div>
         <div class="margin"></div>
         <div class="search-name">
           <p>Search by name</p>
-          <form onSubmit="ajax_func(event)">
+          <form onSubmit="return name_filter(event)" id="name_search_form">
             <label for="product"></label>
             <input type="text" id="product" placeholder="search hurricane" name="name" />
           </form>
@@ -79,7 +80,7 @@
         <div class="margin"></div>
         <div class="search-date">
           <p>Search by date</p>
-          <form onSubmit="ajax_func(event)">
+          <form onSubmit="return date_filter(event)" id="date_search_form">
             <input name="startDate" id="startDate" class="date-picker" />
           </form>
         </div>
@@ -175,8 +176,13 @@
         else {
           add = add + "?id=" + {{ data.storm_id }};
         }
-        console.log(add);
-        window.location.assign(add);
+        axios.get(add)
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
       })
       {% endfor %}
       
@@ -209,21 +215,51 @@
       map.getCanvas().style.cursor = '';
       });
 
-      function ajax_func(e) {
-        var params = ""
-        if (e.target.class === "season") {
-          params = e.target.value;
-        }
-        axios.get('http://127.0.0.1:8000/explore', {
-          params: {
-            ID: params
-          }
-        })
+      function filter_all(e) {
+        e.preventDefault();
+        axios.get('http://127.0.0.1:8000/explore/all')
         .then(function (response) {
           console.log(response);
         })
         .catch(function (error) {
           console.log(error);
+        });
+      }
+
+      function year_filter(e) {
+        e.preventDefault();
+        var params = e.target.innerHTML;
+        axios.get(`http://127.0.0.1:8000/explore/?year=${params}`)
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      }
+
+      function name_filter(e) {
+        e.preventDefault();
+        params = document.getElementById("product").value;
+        axios.get(`http://127.0.0.1:8000/explore/?name=${params}`)
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      }
+
+      function date_filter(e) {
+        e.preventDefault();
+        params = document.getElementById("startDate").value;
+        axios.get(`http://127.0.0.1:8000/explore/?startDate=${params}`)
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
       }
     </script>
   </body>

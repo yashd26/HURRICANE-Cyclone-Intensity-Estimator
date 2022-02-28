@@ -12,6 +12,7 @@ with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=FutureWarning)
     from tensorflow.keras import models
     from tensorflow.keras import layers
+    from tensorflow.keras import optimizers
     from tensorflow.keras import metrics
     from tensorflow.keras.callbacks import EarlyStopping
     from tensorflow.keras.models import load_model
@@ -134,19 +135,20 @@ def build_model():
 
     # Build network architecture
     model = models.Sequential()
-    model.add(layers.Conv2D(32, (1, 1), activation='relu', input_shape=(50, 50, 1)))
+    model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(50, 50, 1)))
     model.add(layers.BatchNormalization(axis=1))
     #model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (1, 1), activation='relu'))
+    model.add(layers.Conv2D(64, (3, 3), (2, 2), activation='relu'))
     #model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (1, 1), activation='relu'))
+    model.add(layers.Conv2D(64, (3, 3), (3, 3), activation='relu'))
     model.add(layers.Flatten())
     model.add(layers.Dropout(0.5))
     model.add(layers.Dense(64, activation='relu'))
-    model.add(layers.Dense(16, activation='relu'))
+    model.add(layers.Dense(32, activation='relu'))
     model.add(layers.Dense(1, activation=None))
 
     # Configure model optimization
+    #optimizer = optimizers.Adam(lr=0.01)
     model.compile(
         optimizer='rmsprop',
         loss='mse',
@@ -515,12 +517,9 @@ if __name__ == "__main__":
         model.save('Model.h5')
         del model
         print('Model Saved!')
+    if save_database:
+        save_database()
+    # predict_image()
 
 # Default hyperparameter values: batch_size=64, epoch=100, optimiser=rmsprop, loss=mse, Augmentation=True, NUM_FOLDS=5
 # Hyperparameter values for model testing: epoch=10, NUM_FOLDS=2, Augmentation=False
-
-#predict_image()
-'''
-if save_database:
-    save_database()
-'''
