@@ -387,8 +387,8 @@ def predict_image():
 def save_database():
     import psycopg2
     import datetime
+    import netCDF4
     #from PIL import Image as im
-    #import netCDF4
 
     model = load_model('Model.h5')
     model.compile(
