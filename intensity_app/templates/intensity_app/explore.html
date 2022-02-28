@@ -217,6 +217,7 @@
 
       function filter_all(e) {
         e.preventDefault();
+        history.replaceState({}, '', 'http://127.0.0.1:8000/explore/all/');
         axios.get('http://127.0.0.1:8000/explore/all')
         .then(function (response) {
           console.log(response);
@@ -229,6 +230,7 @@
       function year_filter(e) {
         e.preventDefault();
         var params = e.target.innerHTML;
+        history.replaceState({}, '', `?year=${params}`);
         axios.get(`http://127.0.0.1:8000/explore/?year=${params}`)
         .then(function (response) {
           console.log(response);
@@ -241,6 +243,7 @@
       function name_filter(e) {
         e.preventDefault();
         params = document.getElementById("product").value;
+        history.replaceState({}, '', `?name=${params}`);
         axios.get(`http://127.0.0.1:8000/explore/?name=${params}`)
         .then(function (response) {
           console.log(response);
@@ -253,6 +256,7 @@
       function date_filter(e) {
         e.preventDefault();
         params = document.getElementById("startDate").value;
+        history.replaceState({}, '', `?startDate=${params}`);
         axios.get(`http://127.0.0.1:8000/explore/?startDate=${params}`)
         .then(function (response) {
           console.log(response);

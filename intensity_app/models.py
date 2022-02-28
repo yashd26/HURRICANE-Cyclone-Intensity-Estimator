@@ -23,7 +23,7 @@ class StormData(models.Model):
         return self.storm_name
 
 class StormTrack(models.Model):
-    storm_data = models.ForeignKey('StormData', on_delete=models.CASCADE)
+    storm_data = models.ForeignKey('StormData', on_delete=models.CASCADE, related_name='storm_track_list')
     intensity = models.FloatField()
     labels = models.FloatField()
     latitude = models.FloatField()

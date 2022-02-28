@@ -12,7 +12,6 @@ with warnings.catch_warnings():
     warnings.filterwarnings("ignore", category=FutureWarning)
     from tensorflow.keras import models
     from tensorflow.keras import layers
-    from tensorflow.keras import optimizers
     from tensorflow.keras import metrics
     from tensorflow.keras.callbacks import EarlyStopping
     from tensorflow.keras.models import load_model
@@ -135,20 +134,19 @@ def build_model():
 
     # Build network architecture
     model = models.Sequential()
-    model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(50, 50, 1)))
+    model.add(layers.Conv2D(32, (1, 1), activation='relu', input_shape=(50, 50, 1)))
     model.add(layers.BatchNormalization(axis=1))
     #model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (3, 3), (2, 2), activation='relu'))
+    model.add(layers.Conv2D(64, (1, 1), activation='relu'))
     #model.add(layers.MaxPooling2D((2, 2)))
-    model.add(layers.Conv2D(64, (3, 3), (3, 3), activation='relu'))
+    model.add(layers.Conv2D(64, (1, 1), activation='relu'))
     model.add(layers.Flatten())
     model.add(layers.Dropout(0.5))
     model.add(layers.Dense(64, activation='relu'))
-    model.add(layers.Dense(32, activation='relu'))
+    model.add(layers.Dense(16, activation='relu'))
     model.add(layers.Dense(1, activation=None))
 
     # Configure model optimization
-    #optimizer = optimizers.Adam(lr=0.01)
     model.compile(
         optimizer='rmsprop',
         loss='mse',
@@ -156,6 +154,7 @@ def build_model():
     )
 
     return model
+
 
 def train_model(model, train_images, train_labels, test_images, test_labels, show_performance_by_epoch=False):
     start = time.process_time()
@@ -355,7 +354,6 @@ def save_model_results(*argv):
 def predict_image():
     '''
     from tensorflow.keras.preprocessing import image
-
     images = image.load_img("./test_image/image1.jpg", color_mode='grayscale', target_size=(50, 50))
     images = image.img_to_array(images)
     print(images.shape)
@@ -388,8 +386,8 @@ def predict_image():
 def save_database():
     import psycopg2
     import datetime
-    from PIL import Image as im
     import netCDF4
+    #from PIL import Image as im
 
     model = load_model('Model.h5')
     model.compile(
@@ -489,17 +487,16 @@ def save_database():
         print("PostgreSQL connection is closed")
 
 if __name__ == "__main__":
+    '''
     # Specify whether the script should use Keras's ImageDataGenerator to augment the training dataset. Assigning
     # this variable to True will improve accuracy, but will also increase execution time.
     save_database = False
     AUGMENT = True
     save_result = False
     save_model = False
-
     # Specify how many folds in the k-fold validation process. Can be any integer greater than or equal to 2. Larger
     # integers will increase execution time.
     NUM_FOLDS = 2
-
     train_images, train_labels, test_images, test_labels = read_and_prepare_data('k_fold', NUM_FOLDS, augment=AUGMENT)
     model = build_model()
     predictions = pd.DataFrame(columns=['prediction', 'actual', 'abs_error', 'category'])
@@ -517,9 +514,9 @@ if __name__ == "__main__":
         model.save('Model.h5')
         del model
         print('Model Saved!')
-    if save_database:
-        save_database()
-    # predict_image()
-
 # Default hyperparameter values: batch_size=64, epoch=100, optimiser=rmsprop, loss=mse, Augmentation=True, NUM_FOLDS=5
 # Hyperparameter values for model testing: epoch=10, NUM_FOLDS=2, Augmentation=False
+#predict_image()
+if save_database:
+    '''
+    save_database()
