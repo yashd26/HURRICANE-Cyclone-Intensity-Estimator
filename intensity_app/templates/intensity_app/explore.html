@@ -89,7 +89,7 @@
         <div class="container">
             <h4 class = "storm-name"><b>Cyclone {{ storm.storm_name }}</b></h4>
             <h5 class = "map-date">{{ storm.origin_date }}</h5>
-            <button onclick="history.back()" class = "close"><b>X</b></button>
+            <button onclick="close_map()" class = "close"><b>X</b></button>
           </div>
           <div class = "wind-data">
             <h6 class = "wind-head">Est. Wind intensity : {{ storm.intensity }}    Kn</h6>
@@ -161,22 +161,18 @@
       .addTo(map);
 
       img.addEventListener("click", () => {
-        var add = window.location.href;
-        console.log(add);
-        if(add.includes("id")) {
-          var idx = add.indexOf("id");
-          console.log(idx);
-          add = add.replace(add.slice(idx-1), '');
-          console.log(add);
+        var address = window.location.href;
+        if(address.includes("id")) {
+          var idx = address.indexOf("id");
+          address = address.replace(address.slice(idx-1), '');
         }
-        if(add.includes("?")) {
-          add = add + "&id=" + {{ data.storm_id }};
+        if(address.includes("?")) {
+          address = address + "&id=" + {{ data.storm_id }};
         }
         else {
-          add = add + "?id=" + {{ data.storm_id }};
+          address = address + "?id=" + {{ data.storm_id }};
         }
-        console.log(add);
-        window.location.assign(add);
+        window.location.assign(address);
       })
       {% endfor %}
       
@@ -208,6 +204,13 @@
       map.on('mouseleave', 'circle', () => {
       map.getCanvas().style.cursor = '';
       });
+       
+      function close_map() {
+        var address = window.location.href;
+        var idx = address.indexOf("id");
+        address = address.replace(address.slice(idx-1), '');
+        window.location.assign(address);
+      }
     </script>
   </body>
 </html>
