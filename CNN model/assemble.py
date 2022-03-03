@@ -51,6 +51,8 @@ for i in range(len(files)):
     try:
         wind_speed = matching_best_track_data.max_sus_wind_speed.reset_index(drop=True)[0]
     except Exception:
+        raw_data.close()
+        os.remove(f"Satellite Imagery/{files[i]}")
         print('\rCould not find label for image of ' + storm_name + ' at date ' + str(date) + ' and time ' + str(time), end='\n')
         continue  # Skip to the next hurricane image if the a wind speed could not be found for this hurricane image
 
