@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'intensity_app.apps.IntensityAppConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
