@@ -15,7 +15,10 @@ The model is trained using Tensorflow and Keras and the website is made with Dja
 
 ### Use case:
 
-Data predictions from the CNN model are feeded into the Postgres Database which is then accesssed by the backend of our website. These data is what is presented to the user on the portal.  
+Data predictions from the CNN model are feeded into the Postgres Database which is then accesssed by the backend of our website. These data is what is presented to the user on the portal.
+
+![1](https://user-images.githubusercontent.com/65943606/177590658-766f4de6-a1e2-4776-8afc-b9202032e0d5.JPG)
+![Capture](https://user-images.githubusercontent.com/65943606/177590673-e352dbcb-628e-4aa2-b19a-e2efabbef807.JPG)
 
 ### Dependencies to be installed:
 
@@ -42,5 +45,3 @@ pip install matplotlib
 #### Database used: 
 
 POSTGRESQL
-
-Images will be updated soon :)
