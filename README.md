@@ -20,28 +20,4 @@ Data predictions from the CNN model are feeded into the Postgres Database which 
 ![1](https://user-images.githubusercontent.com/65943606/177590658-766f4de6-a1e2-4776-8afc-b9202032e0d5.JPG)
 ![Capture](https://user-images.githubusercontent.com/65943606/177590673-e352dbcb-628e-4aa2-b19a-e2efabbef807.JPG)
 
-#### Dependencies to be installed:
-
-pip install django
-
-pip install psycopg2
-
-pip install seaborn
-
-pip install tensorflow
-
-pip install pandas
-
-pip install netCDF4
-
-pip install numpy
-
-pip install beautifulsoup4
-
-pip install requests
-
-pip install matplotlib
-
-#### Database used: 
-
-POSTGRESQL
+[Writeup.pdf](https://github.com/yashd26/cyclone-intensity-using-CNN/files/10404152/IISFdoc_removed.pdf)
