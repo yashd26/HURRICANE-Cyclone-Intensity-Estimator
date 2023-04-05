@@ -1,0 +1,183 @@
+[
+    {
+        "model": "intensity_app.stormdata",
+        "pk": 1,
+        "fields": {
+            "storm_id":1,
+            "storm_name": "Bill",
+            "intensity": 33.0,
+            "category": 1,
+            "latitude": 30.0,
+            "longitude": 50.0,
+            "origin_date": "2022-02-09",
+            "description": "first storm"
+        }
+    },
+    {
+        "model": "intensity_app.stormdata",
+        "pk": 2,
+        "fields": {
+            "storm_id":2,
+            "storm_name": "Claudette",
+            "intensity": 45.5,
+            "category": 2,
+            "latitude": 25.0,
+            "longitude": 40.0,
+            "origin_date": "2022-02-10",
+            "description": "second storm"
+        }
+    },
+    {
+        "model": "intensity_app.stormdata",
+        "pk": 3,
+        "fields": {
+            "storm_id":3,
+            "storm_name": "Danny",
+            "intensity": 345.0,
+            "category": 3,
+            "latitude": 50.0,
+            "longitude": 40.0,
+            "origin_date": "2022-01-10",
+            "description": "third"
+        }
+    },{
+        "model": "intensity_app.stormdata",
+        "pk": 4,
+        "fields": {
+            "storm_id":4,
+            "storm_name": "Elsa",
+            "intensity": 345.0,
+            "category": 1,
+            "latitude": 45.01,
+            "longitude": 25.0,
+            "origin_date": "2022-01-15",
+            "description": "Fourth"
+        }
+    },
+    {
+        "model": "intensity_app.stormdata",
+        "pk": 5,
+        "fields": {
+            "storm_id":5,
+            "storm_name": "maddy1",
+            "intensity": 35.0,
+            "category": 2,
+            "latitude": 20.0,
+            "longitude": 20.0,
+            "origin_date": "2022-01-02",
+            "description": "first storm"
+        }
+    },
+    {
+        "model": "intensity_app.stormdata",
+        "pk": 6,
+        "fields": {
+            "storm_id":6,
+            "storm_name": "katrina",
+            "intensity": 31.0,
+            "category": 1,
+            "latitude": 45.0,
+            "longitude": 35.0,
+            "origin_date": "2022-02-02",
+            "description": "first storm"
+        }
+    },
+    {
+        "model": "intensity_app.stormdata",
+        "pk": 8,
+        "fields": {
+            "storm_id":8,
+            "storm_name": "tom",
+            "intensity": 67.0,
+            "category": 1,
+            "latitude": 70.0,
+            "longitude": 30.0,
+            "origin_date": "2021-03-10",
+            "description": "first storm"
+        }
+    },
+    {
+        "model": "intensity_app.stormdata",
+        "pk": 9,
+        "fields": {
+            "storm_id":9,
+            "storm_name": "jerry",
+            "intensity": 22.0,
+            "category": 3,
+            "latitude": 20.0,
+            "longitude": 70.0,
+            "origin_date": "2021-05-09",
+            "description": "first storm"
+        }
+    },
+    {
+        "model": "intensity_app.stormdata",
+        "pk": 11,
+        "fields": {
+            "storm_id":11,
+            "storm_name": "ranoutofnames",
+            "intensity": 100.0,
+            "category": 5,
+            "latitude": 75.0,
+            "longitude": 75.0,
+            "origin_date": "2019-06-10",
+            "description": "first storm"
+        }
+    },
+    {
+        "model": "intensity_app.stormdata",
+        "pk": 12,
+        "fields": {
+            "storm_id":12,
+            "storm_name": "Billgates",
+            "intensity": 75.0,
+            "category": 3,
+            "latitude": 65.0,
+            "longitude": 65.0,
+            "origin_date": "2019-01-09",
+            "description": "first storm"
+        }
+    },
+    {
+        "model": "intensity_app.stormdata",
+        "pk": 13,
+        "fields": {
+            "storm_id":13,
+            "storm_name": "amazon",
+            "intensity": 37.0,
+            "category": 2,
+            "latitude": 24.0,
+            "longitude": 15.0,
+            "origin_date": "2021-08-09",
+            "description": "first storm"
+        }
+    },
+    {
+        "model": "intensity_app.stormdata",
+        "pk": 14,
+        "fields": {
+            "storm_id":14,
+            "storm_name": "Billy",
+            "intensity": 55.0,
+            "category": 2,
+            "latitude": 65.0,
+            "longitude": 30.0,
+            "origin_date": "2019-10-09",
+            "description": "first storm"
+        }
+    },
+    {
+        "model": "intensity_app.stormdata",
+        "pk": 15,
+        "fields": {
+            "storm_id":15,
+            "storm_name": "doodles",
+            "intensity": 56.0,
+            "category": 2,
+            "latitude": 80.0,
+            "longitude": 20.0,
+            "origin_date": "2021-01-15",
+            "description": "first storm"
+        }
+    }
+]

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'intensity_app/explore_style.css' %}">
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.js"></script>
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.7.0/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" media="screen" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/base/jquery-ui.css">
+    <script type="text/javascript">
+        $(function() {
+            $('.date-picker').datepicker( {
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'MM yy',
+            onClose: function(dateText, inst) { 
+                $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+            }
+            });
+
+            $('#ui-datepicker-div').css("z-index", "3");
+            $('#ui-datepicker-div').css("margin-top", "10px");
+        });
+    </script>
+    <style>
+    .ui-datepicker-calendar {
+        display: none;
+    }
+    </style>
+
+    <title>Document</title>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="nav-center">
+        <div class="nav-logo">
+         <a href="/home"><span>Hurri</span>Cane.</a>
+        </div>
+        <div class="nav-links">
+          <a href="#" class="nav-link">Explore</a>
+          <a href="#" class="nav-link">About</a>
+        </div>
+      </div>
+    </nav>
+    <div id="map" style="width: 100%; height: calc(100vh - 4rem); "></div>
+    <div class="btn" id="btn">
+      <img src={% static './intensity_app/images/gear.png' %} alt="">
+    </div>
+    <div class="map-controls">
+      <div class="controls">
+        <div class="search-year">
+          <p>View by season</p>
+          <div class="seasons">
+            <a href={% url "explore_all" %} class="season">Show All</a>
+            <a href={% url "explore" %}?year=2020 class="season">2020</a>
+            <a href={% url "explore" %}?year=2019 class="season">2019</a>
+            <a href={% url "explore" %}?year=2018 class="season">2018</a>
+          </div>
+        </div>
+        <div class="margin"></div>
+        <div class="search-name">
+          <p>Search by name</p>
+          <form action="http://127.0.0.1:8000/explore/" method="GET">
+            <label for="product"></label>
+            <input type="text" id="product" placeholder="search hurricane" name="name" />
+          </form>
+        </div>
+        <div class="margin"></div>
+        <div class="search-date">
+          <p>Search by date</p>
+          <form action="http://127.0.0.1:8000/explore/">
+            <input name="startDate" id="startDate" class="date-picker" />
+          </form>
+        </div>
+      </div>
+    </div>
+    {% if show_card %}
+      <div class="map-card" id = "myDiv">
+        <div class="container">
+          <div>
+            <h4 class = "storm-name"><b>Cyclone {{ storm.storm_name }}</b></h4>
+            <h5 class = "map-date">{{ storm.origin_date }}</h5>
+          </div>
+            <button onclick="close_map()" class = "close"><b>X</b></button>
+          </div>
+          <div class = "wind-data">
+            <h6 class = "wind-head">Est. Wind intensity : {{ storm.intensity }}    Kn</h6>
+            <h6 class = "wind-head">latitude : {{ storm.latitude }} </h6>
+            <h6 class = "wind-head">longitude : {{ storm.longitude }}</h6>
+          </div>
+           <div class = "images">
+          <img src= "https://eoimages.gsfc.nasa.gov/images/imagerecords/83000/83486/CycloneIta_amo_2014101_tn.jpg" style="width:100%">
+           </div>
+    </div>
+      {% endif %}
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+      $(function() {
+      $( "input#product" ).autocomplete(
+      {
+        source: '{% url 'explore_all' %}',
+         minLength: 1,
+      })
+      });
+    </script>
+    <script>
+      
+          const btn = document.getElementById('btn');
+          const control = document.querySelector('.map-controls')
+
+          btn.addEventListener('click',() => {
+              if(control.classList.contains('show-control')){
+                  control.classList.remove('show-control')
+              } else{
+                  control.classList.add('show-control')
+              }
+          })
+
+      mapboxgl.accessToken = 'pk.eyJ1IjoicHJpeWFuc2h1cDg5MSIsImEiOiJja3ppYnlwbnMyemkyMm5vMTByeXIwZHJvIn0.joRfFaZ6lJmH2U5OBtVGyg';
+      const map = new mapboxgl.Map({
+          container: 'map', // container ID
+          style: 'mapbox://styles/priyanshup891/ckzdpbo1w005p14p93iljoz95', // style URL
+          center: [85.324, 27.7172], // starting position [lng, lat]
+          zoom: 3 // starting zoom
+      });
+      
+      map.addControl(new mapboxgl.NavigationControl());
+
+      {% for data in storms_list %}
+      var el = document.createElement('div');
+      el.setAttribute("id","marker");
+      el.style.cssText="font-size:18px; color:rgb(0, 35, 58); cursor:pointer;"
+
+      var img = document.createElement('img');
+      img.setAttribute("id","img");
+      img.src="https://pngimg.com/uploads/hurricane/hurricane_PNG13.png";
+      img.style.width="50px"
+
+      el.appendChild(img);
+
+      var title = document.createElement('span');
+      title.setAttribute("id","title");
+      title.textContent="{{data.storm_name}}"
+      title.style.cssText="background-color:rgb(235, 235, 235); padding:5px 10px; font-size:18px; border-radius:5px; letter-spacing:1px; position:absolute";
+
+      el.appendChild(title);
+
+      var marker1 = new mapboxgl.Marker(el)
+      .setLngLat([{{ data.longitude }}, {{data.latitude}}])
+      .addTo(map);
+
+      img.addEventListener("click", () => {
+        var address = window.location.href;
+        if(address.includes("id")) {
+          var idx = address.indexOf("id");
+          address = address.replace(address.slice(idx-1), '');
+        }
+        if(address.includes("?")) {
+          address = address + "&id=" + {{ data.storm_id }};
+        }
+        else {
+          address = address + "?id=" + {{ data.storm_id }};
+        }
+        window.location.assign(address);
+      })
+      {% endfor %}
+      
+      map.addLayer({
+      'id': 'circle',
+      'type': 'circle',
+      'source': 'points',
+      'paint': {
+      'circle-color': '#4264fb',
+      'circle-radius': 8,
+      'circle-stroke-width': 2,
+      'circle-stroke-color': '#ffffff'
+      }
+      }); 
+
+      // Center the map on the coordinates of any clicked circle from the 'circle' layer.
+      map.on('click', 'circle', (e) => {
+      map.flyTo({
+      center: e.features[0].geometry.coordinates
+      });
+      });
+
+      // Change the cursor to a pointer when the it enters a feature in the 'circle' layer.
+      map.on('mouseenter', 'circle', () => {
+      map.getCanvas().style.cursor = 'pointer';
+      });
+
+      // Change it back to a pointer when it leaves.
+      map.on('mouseleave', 'circle', () => {
+      map.getCanvas().style.cursor = '';
+      });
+
+      function close_map() {
+        var address = window.location.href;
+        var idx = address.indexOf("id");
+        address = address.replace(address.slice(idx-1), '');
+        window.location.assign(address);
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'intensity_app/home_style.css' %}">
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <!-- <link rel="stylesheet" type="text/css" href="{% static './intensity_app/home_style.css' %}"> -->
+    <title>Home</title>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-center">
+          <div class="nav-logo">
+           <span>Hurri</span>Cane.
+          </div>
+          <div class="nav-links">
+            <a href="#" class="nav-link">Explore</a>
+            <a href="#" class="nav-link">About</a>
+          </div>
+        </div>
+      </nav>
+    <div class="container">
+        <div class="content">
+            <div class="info">
+                <h2>Topical Cyclone</h2>
+                <div class="margin"></div>
+                <h1>Estimator</h1>
+                <p><Span>Deep Learning-Based Hurricane Intensity Estimator.</Span> Applying machine learning to objectively estimate tropical cyclone intensity.</p>
+                <div class="buttons">
+                    <a href="/explore" class="btn explore-btn">Explore</a>
+                    <a href="#" class="btn">Read More</a>
+                </div>
+            </div>
+            <div class="globe">
+                <img src="{% static './intensity_app/images/globe.png' %}" alt="">
+            </div>
+        </div>
+    </div>
+</body>
+</html>
