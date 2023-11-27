@@ -1,3 +1,5 @@
+[Paper.docx](https://github.com/yashd26/cyclone-intensity-using-CNN/files/13478239/ResearchPaper.1.docx)
+
 Website link: https://hurricanetracker.onrender.com
 # This project includes two sub-parts
 
